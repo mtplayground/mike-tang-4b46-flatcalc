@@ -16,6 +16,8 @@
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-base: 1rem;
   --font-size-title: 1.25rem;
+  --font-size-display: 2.75rem;
+  --font-size-key: 1.25rem;
   --line-height-base: 1.5;
 
   --space-1: 0.25rem;
@@ -60,7 +62,7 @@ body {
   align-content: start;
   gap: var(--space-5);
   width: min(100%, 22rem);
-  min-height: 28rem;
+  min-height: 34rem;
   padding: var(--space-5);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -86,7 +88,7 @@ body {
   border-radius: var(--radius-md);
   background: var(--color-surface-muted);
   color: var(--color-text);
-  font-size: 2.75rem;
+  font-size: var(--font-size-display);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   line-height: 1;
@@ -102,6 +104,7 @@ body {
 
 .calculator-key {
   appearance: none;
+  -webkit-tap-highlight-color: transparent;
   display: grid;
   min-width: 0;
   min-height: 4rem;
@@ -111,7 +114,7 @@ body {
   background: var(--color-surface-muted);
   color: var(--color-text);
   font: inherit;
-  font-size: 1.25rem;
+  font-size: var(--font-size-key);
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
@@ -173,4 +176,66 @@ body {
 
 .calculator-key--tall {
   grid-row: span 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calculator-key {
+    transition: none;
+  }
+}
+
+@media (max-width: 30rem) {
+  :root {
+    --font-size-title: 1.125rem;
+    --font-size-display: 2.25rem;
+    --font-size-key: 1.125rem;
+  }
+
+  .page-shell {
+    align-items: start;
+    padding: var(--space-4);
+  }
+
+  .calculator-shell {
+    gap: var(--space-4);
+    min-height: auto;
+    padding: var(--space-4);
+  }
+
+  .calculator-display {
+    min-height: 4.75rem;
+    padding: var(--space-4);
+  }
+
+  .calculator-keypad {
+    gap: var(--space-2);
+  }
+
+  .calculator-key {
+    min-height: 3.75rem;
+  }
+}
+
+@media (max-width: 22rem) {
+  :root {
+    --font-size-display: 2rem;
+    --font-size-key: 1rem;
+  }
+
+  .page-shell {
+    padding: var(--space-3);
+  }
+
+  .calculator-shell {
+    padding: var(--space-3);
+  }
+
+  .calculator-display {
+    min-height: 4.25rem;
+    padding: var(--space-3);
+  }
+
+  .calculator-key {
+    min-height: 3.25rem;
+  }
 }
