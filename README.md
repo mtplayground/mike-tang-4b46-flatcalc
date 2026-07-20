@@ -8,6 +8,29 @@ This project is a no-build static site. It is served directly from plain files:
 
 There are no package dependencies and no build step.
 
+## Local serving
+
+Serve the repository root with any static file server. For example:
+
+```bash
+python3 -m http.server 8080 --bind 0.0.0.0
+```
+
+Then open `http://localhost:8080/`.
+
+## Deployment
+
+Deploy the repository root to static file hosting.
+
+- Publish directory: repository root
+- Entry point: `index.html`
+- Build command: none
+- Runtime dependencies: none
+- Dockerfile: not required
+- CI/CD pipeline: not required
+
+The deployed host only needs to serve `index.html`, `styles.css`, and `calculator.js` as static files.
+
 ## Verification checklist
 
 The calculator was verified with lightweight DOM-mock checks against `calculator.js`:
