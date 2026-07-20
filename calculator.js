@@ -185,9 +185,7 @@
     render();
   }
 
-  function handleButtonAction(button) {
-    const { action, value } = button.dataset;
-
+  function handleCalculatorAction(action, value) {
     switch (action) {
       case "digit":
         inputDigit(value);
@@ -209,6 +207,12 @@
     }
   }
 
+  function handleButtonAction(button) {
+    const { action, value } = button.dataset;
+
+    handleCalculatorAction(action, value);
+  }
+
   function handleKeypadClick(event) {
     const button = event.target.closest("button[data-action]");
 
@@ -219,6 +223,41 @@
     handleButtonAction(button);
   }
 
+  function mapKeyboardAction(key) {
+    if (/^\d$/.test(key)) {
+      return { action: "digit", value: key };
+    }
+
+    if (key === ".") {
+      return { action: "decimal", value: "." };
+    }
+
+    if (["+", "-", "*", "/", "−"].includes(key)) {
+      return { action: "operator", value: key === "−" ? "-" : key };
+    }
+
+    if (key === "Enter" || key === "=") {
+      return { action: "equals" };
+    }
+
+    if (key === "Escape") {
+      return { action: "clear" };
+    }
+
+    return null;
+  }
+
+  function handleKeyboardInput(event) {
+    const mappedAction = mapKeyboardAction(event.key);
+
+    if (!mappedAction) {
+      return;
+    }
+
+    event.preventDefault();
+    handleCalculatorAction(mappedAction.action, mappedAction.value);
+  }
+
   function getState() {
     return { ...state };
   }
@@ -227,10 +266,14 @@
     keypad.addEventListener("click", handleKeypadClick);
   }
 
+  document.addEventListener("keydown", handleKeyboardInput);
+
   window.calculatorController = Object.freeze({
     clear,
     applyPendingOperation,
     getState,
+    handleCalculatorAction,
+    handleKeyboardInput,
     inputDecimal,
     inputDigit,
     inputEquals,
