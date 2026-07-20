@@ -4,7 +4,10 @@
   --color-page: #f5f6f7;
   --color-surface: #ffffff;
   --color-surface-muted: #eceff1;
+  --color-surface-hover: #e3e7ea;
+  --color-surface-pressed: #d9dee2;
   --color-border: #d7dce0;
+  --color-border-strong: #aeb7bf;
   --color-text: #17191c;
   --color-text-muted: #656b73;
   --color-accent: #2563eb;
@@ -98,6 +101,7 @@ body {
 }
 
 .calculator-key {
+  appearance: none;
   display: grid;
   min-width: 0;
   min-height: 4rem;
@@ -109,6 +113,58 @@ body {
   font: inherit;
   font-size: 1.25rem;
   font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    filter 120ms ease,
+    transform 80ms ease;
+}
+
+.calculator-key[data-action="operator"],
+.calculator-key[data-action="equals"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.calculator-key:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.calculator-key:active {
+  transform: translateY(1px);
+}
+
+@media (hover: hover) {
+  .calculator-key:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .calculator-key[data-action="operator"]:hover,
+  .calculator-key[data-action="equals"]:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    filter: brightness(0.96);
+  }
+}
+
+.calculator-key:active {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-pressed);
+}
+
+.calculator-key[data-action="operator"]:active,
+.calculator-key[data-action="equals"]:active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  filter: brightness(0.92);
 }
 
 .calculator-key--wide {
