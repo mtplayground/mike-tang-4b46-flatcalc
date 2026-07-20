@@ -23,6 +23,45 @@
     display.textContent = state.currentEntry;
   }
 
+  function formatResult(value) {
+    if (!Number.isFinite(value)) {
+      return String(value);
+    }
+
+    return Number.parseFloat(value.toPrecision(12)).toString();
+  }
+
+  function applyOperation(left, operator, right) {
+    switch (operator) {
+      case "+":
+        return left + right;
+      case "-":
+        return left - right;
+      case "*":
+        return left * right;
+      case "/":
+        return left / right;
+      default:
+        return right;
+    }
+  }
+
+  function applyPendingOperation() {
+    if (state.pendingOperator === null || state.accumulatedValue === null) {
+      return Number(state.currentEntry);
+    }
+
+    const result = applyOperation(
+      state.accumulatedValue,
+      state.pendingOperator,
+      Number(state.currentEntry),
+    );
+
+    state.currentEntry = formatResult(result);
+    state.accumulatedValue = result;
+    return result;
+  }
+
   function inputDigit(digit) {
     if (!/^\d$/.test(digit)) {
       return;
@@ -58,13 +97,22 @@
       return;
     }
 
-    state.accumulatedValue = Number(state.currentEntry);
+    if (state.pendingOperator !== null && !state.shouldStartNewEntry) {
+      state.accumulatedValue = applyPendingOperation();
+    } else {
+      state.accumulatedValue = Number(state.currentEntry);
+    }
+
     state.pendingOperator = operator;
     state.shouldStartNewEntry = true;
     render();
   }
 
   function inputEquals() {
+    if (state.pendingOperator !== null) {
+      applyPendingOperation();
+    }
+
     state.pendingOperator = null;
     state.accumulatedValue = null;
     state.shouldStartNewEntry = true;
@@ -120,6 +168,7 @@
 
   window.calculatorController = Object.freeze({
     clear,
+    applyPendingOperation,
     getState,
     inputDecimal,
     inputDigit,
