@@ -1,0 +1,83 @@
+Architecture plan for the static calculator
+
+Product/name source
+- The issues do not define a distinct product brand/name. Use generic calculator wording in project copy until an issue explicitly provides a name.
+
+Project shape
+- No-build static site served directly from repository files.
+- Core files expected by the issue set:
+  - index.html: semantic page shell, display region, button grid markup, script/style references.
+  - styles.css: design tokens, page layout, display styling, button grid, interaction states, responsive polish.
+  - calculator.js: calculator state, input transitions, arithmetic, display rendering, click and keyboard handlers.
+  - README.md: static serving notes, manual verification checklist, deployment notes.
+
+HTML/module structure
+- Use a single calculator wrapper with semantic regions:
+  - main app container.
+  - output/display element with an accessible live label.
+  - button grid with buttons annotated by data attributes such as data-action, data-value, and data-operator.
+- Keep markup static and dependency-free so it works by opening or serving index.html.
+
+CSS organization
+- Define design tokens at :root:
+  - muted/monochrome surface, text, border, and control colors.
+  - one accent color reserved for operator and equals buttons.
+  - sans-serif font stack, compact type scale, spacing scale, radius, and transition values.
+- Organize styles in this order:
+  - reset/base box sizing.
+  - page shell.
+  - calculator layout.
+  - display.
+  - button grid and button variants.
+  - interaction states.
+  - responsive adjustments.
+- Maintain flat/minimal styling: no decorative gradients, heavy shadows, or unrelated visual assets.
+
+JavaScript organization
+- Keep calculator.js dependency-free and split behavior into small functions:
+  - createInitialState/resetState.
+  - inputDigit.
+  - inputDecimal.
+  - chooseOperator.
+  - calculate/applyPendingOperation.
+  - pressEquals.
+  - clear.
+  - formatDisplayValue.
+  - render.
+  - handleButtonAction.
+  - handleKeyboardInput.
+- Shared state shape:
+  - currentEntry: string displayed/input value.
+  - accumulatedValue: number or null.
+  - pendingOperator: "+", "-", "*", "/" or null.
+  - shouldStartNewEntry: boolean.
+  - error: string or null for divide-by-zero/invalid states.
+- Keep all input paths routed through the same transition functions so click and keyboard behavior stay identical.
+
+Issue dependencies and sequencing
+- Issue #1 establishes the static files and README.
+- Issues #2-#5 build the UI foundation:
+  - #2 page shell and tokens.
+  - #3 display region.
+  - #4 grid markup.
+  - #5 button visual states.
+- Issues #6-#10 build behavior:
+  - #6 state model and display rendering for digits/decimal.
+  - #7 button handlers.
+  - #8 arithmetic and chained operations.
+  - #9 edge guards.
+  - #10 keyboard input on top of shared handlers.
+- Issues #11-#13 finish quality and release:
+  - #11 verification checklist in README.
+  - #12 responsive visual polish.
+  - #13 static deployment documentation.
+
+Key design decisions
+- Use strings for currentEntry to preserve user intent while typing decimals and leading zero transitions.
+- Convert to numbers only at operation boundaries.
+- Treat divide-by-zero as an explicit error state and render a clear indicator instead of Infinity or NaN.
+- Make clear/reset globally valid, including from error state.
+- Format results conservatively to avoid layout breakage while preserving readable precision.
+- Prefer event delegation on the button grid over per-button listeners.
+- Keyboard support should prevent default only for handled calculator keys.
+- Verification can be lightweight manual/browser checks because the project has no build or test framework requirement.
